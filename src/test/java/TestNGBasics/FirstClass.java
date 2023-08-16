@@ -2,63 +2,73 @@ package TestNGBasics;
 import org.testng.annotations.*;
 public class FirstClass {
 
-@BeforeSuite
+@BeforeSuite(alwaysRun = true)
 public void BeforeSuite()
 {
 	System.out.println("BeforeSuite");
 }
 
-@AfterSuite
+@AfterSuite(alwaysRun = true)
 public void afterSuite()
 {
 	System.out.println("afterSuite");
 }
 
-@BeforeTest
+@BeforeTest(alwaysRun = true)
 public void BeforeTest()
 {
 	System.out.println("BeforeTest");
 }
 
-@AfterTest
+@AfterTest(alwaysRun = true)
 public void AfterTest()
 {
 	System.out.println("AfterTest");
 }
 
-@BeforeClass
+@BeforeClass(alwaysRun = true)
 public void BeforeClass()
 {
 	System.out.println("BeforeClass");
 }
 
-@AfterClass
+@AfterClass(alwaysRun = true)
 public void AfterClass()
 {
 	System.out.println("AfterClass");
 }
 
-@BeforeMethod
+@BeforeMethod(alwaysRun = true)
 public void BeforeMethod()
 {
 	System.out.println("BeforeMethod");
 }
 
-@AfterMethod
+@AfterMethod(alwaysRun = true)
 public void AfterMethod()
 {
 	System.out.println("AfterMethod");
 }
 
-@Test
-public void Testcase1()
+
+
+@Test(priority=0,enabled=true,description="postive test case",timeOut=60,invocationCount=1,groups={"SIT","Sanity"})
+public void Login() throws InterruptedException
 {
-	System.out.println("Testcase1");
+	System.out.println("Login");
+	//Thread.sleep(20000);
+	//throw new ArithmeticException("Fail");
 }
 
-@Test
-public void Testcase2()
+@Test(priority=1,dependsOnMethods="Login",groups="Sanity")
+public void AddUser()
 {
-	System.out.println("Testcase2");
+	System.out.println("Add user");
+}
+
+@Test(priority=2,groups={"SIT","Sanity"})
+public void CreateAccount()
+{
+	System.out.println("CreateAccount");
 }
 }
