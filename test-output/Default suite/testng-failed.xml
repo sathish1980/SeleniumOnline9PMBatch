@@ -3,14 +3,14 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="Testcases.FirstTestCase">
+      <class name="Testcases.SeachTestCase">
         <methods>
+          <include name="FlightSearchWithValidValues"/>
           <include name="LaunchTheBrowser"/>
           <include name="LauchTheBrowserURL"/>
-          <include name="LaunchTheBrowserCheck"/>
           <include name="teardown"/>
         </methods>
-      </class> <!-- Testcases.FirstTestCase -->
+      </class> <!-- Testcases.SeachTestCase -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
