@@ -14,6 +14,8 @@ import org.testng.annotations.Test;
 
 import BrowserDriver.WebDriverFile;
 import Commons.WebDriverCommons;
+import Pages.SearchPage;
+import Pages.SearchResultPage;
 import Utils.PropertyFileHandle;
 
 
@@ -46,98 +48,49 @@ public class SeachTestCase extends WebDriverFile {
 		 * Wait for Search Result Page
 		 * Valdiate the Search REsult critera is macth with the search input
 		 */
-		ClickFromLocation();
-		SelectLocation("DEL");
-		ClickToLocation();
-		SelectLocation("MAA");
-		SelectADate("26");
-		ClickOnSearchButton();
-		waitForOkayGotIt();
-		String searchResult = WaitAndGetSearchText();
+		SearchPage s = new SearchPage(driver);
+		s.ClickFromLocation();
+		s.SelectLocation("DEL");
+		s.ClickToLocation();
+		s.SelectLocation("MAA");
+		s.SelectADate("26");
+		s.ClickOnSearchButton();
+		SearchResultPage srp = new SearchResultPage(driver);
+		srp.waitForOkayGotIt();
+		String searchResult = srp.WaitAndGetSearchText();
 		System.out.println(searchResult);
-		Assert.assertEquals("Flights from Mumbai to Chennai", searchResult);
+		Assert.assertEquals("Flights from New Delhi to Chennai", searchResult);
 	}
 	
-	public void ClickFromLocation() throws InterruptedException
-	{
-		Thread.sleep(5000);
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforelementobeclickable(driver, driver.findElement(By.xpath("//*[@for='fromCity']")));
-		
-		driver.findElement(By.xpath("//*[@for='fromCity']")).click();
-	}
-	
-	public void ClickToLocation() throws InterruptedException
-	{
-		//Thread.sleep(5000);
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforelementobeclickable(driver, driver.findElement(By.xpath("//*[@for='toCity']")));
-		
-		driver.findElement(By.xpath("//*[@for='toCity']")).click();
-	}
-	public void SelectLocation(String expectedLocation)
-	{
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforelementobeclickable(driver, driver.findElement(By.xpath("(//*[@id='react-autowhatever-1']//li)[last()]")));
-		List<WebElement> allElements = driver.findElements(By.xpath("//*[@id='react-autowhatever-1']//li"));
-		for(int i=1;i<allElements.size();i++)
-		{
-			String actualLocation = driver.findElement(By.xpath("//*[@id='react-autowhatever-1']//li["+i+"]//div[contains(@class,'pushRight')]")).getText();
-			if (expectedLocation.equalsIgnoreCase(actualLocation))
-			{
-				driver.findElement(By.xpath("//*[@id='react-autowhatever-1']//li["+i+"]")).click();
-				break;
-			}
-				
-		}
-	}
-	
-	public void SelectADate(String dateToBeSelect)
-	{
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforpresencefelement(driver, By.xpath("(//*[@class='DayPicker-Month'])[last()-1]//*[@class='DayPicker-Week']//div[contains(@class,'DayPicker-Day')]"));
-		
-		List<WebElement> AllDates = driver.findElements(By.xpath("(//*[@class='DayPicker-Month'])[last()-1]//*[@class='DayPicker-Week']//div[contains(@class,'DayPicker-Day')]"));
-		for(int i=1;i<=AllDates.size();i++)
-		{
-			String dateIsDisabled = driver.findElement(By.xpath("((//*[@class='DayPicker-Month'])[last()-1]//*[@class='DayPicker-Week']//div[contains(@class,'DayPicker-Day')])["+i+"]")).getAttribute("class");
-			if(!dateIsDisabled.contains("disabled"))
-			{
-				String actualDate = driver.findElement(By.xpath("((//*[@class='DayPicker-Month'])[last()-1]//*[@class='DayPicker-Week']//div[contains(@class,'DayPicker-Day')])["+i+"]//p")).getText();
-				if (actualDate.equalsIgnoreCase(dateToBeSelect))
-				{
-					driver.findElement(By.xpath("((//*[@class='DayPicker-Month'])[last()-1]//*[@class='DayPicker-Week']//div[contains(@class,'DayPicker-Day')])["+i+"]")).click();
-					break;
-				}
-			}
-			
-		}
-	}
-	
-	public void ClickOnSearchButton()
-	{
-		driver.findElement(By.xpath("//*[text()='Search']")).click();
-	}
-	
-	public String WaitAndGetSearchText()
+	@Test(priority=1)
+	public void FlightSearchWithInValidValues() throws InterruptedException
 	{
 		
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforpresencefelement(driver, By.xpath("//*[contains(@class,'journey-title')]//span"));
-		String actualResultText = driver.findElement(By.xpath("//*[contains(@class,'journey-title')]//span")).getText();
-		return actualResultText;
+		SearchPage s = new SearchPage(driver);
+		s.ClickOnBackButton(driver);
+		s.ClickFromLocation();
+		s.SelectLocation("MAA");
+		s.ClickToLocation();
+		s.SelectLocation("MAA");
+		String actualError = s.GetErrorMessageForSameCity();
+		Assert.assertEquals("From & To airports cannot be the same", actualError);
+		
 	}
-
-	public void waitForOkayGotIt() throws InterruptedException
+	
+	@Test(priority=2)
+	public void ValidateErrorRemovedAfterWeCorrectTheError() throws InterruptedException
 	{
-		WebDriverCommons WD = new WebDriverCommons();
-		WD.Explicitwaitforpresencefelement(driver, By.xpath("(//div[@class='overlay']//span)[1]"));
-		Thread.sleep(5000);
-		driver.findElement(By.xpath("(//div[@class='overlay']//span)[1]")).click();
+		
+		SearchPage s = new SearchPage(driver);
+		s.ClickFromLocation();
+		s.SelectLocation("DEL");
+		String actualError = s.GetErrorMessageForSameCity();
+		Assert.assertEquals("No Error Exist", actualError);
+		
 	}
 	@AfterSuite
 	public void teardown()
 	{
-		//driver.quit();
+		driver.quit();
 	}
 }

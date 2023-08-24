@@ -103,11 +103,7 @@ public class WebDriverCommons
 		
 		return Destinationfile.toString();
 	}
-	
-	public void ClickOnBackButton(WebDriver driver)
-	{
-		driver.navigate().back();
-	}
+
 	
 	public void SelectAValueFromList(WebDriver driver, String expectedloaction)
 	{
@@ -121,5 +117,10 @@ public class WebDriverCommons
 				break;
 			}
 		}
+	}
+	
+	public void ClickOnBackButton(WebDriver driver)
+	{
+		driver.navigate().back();
 	}
 }
