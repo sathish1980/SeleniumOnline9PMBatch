@@ -26,5 +26,7 @@ public class SearchResultPage extends WebDriverCommons{
 		Explicitwaitforpresencefelement(driver, By.xpath("(//div[@class='overlay']//span)[1]"));
 		driver.findElement(By.xpath("(//div[@class='overlay']//span)[1]")).click();
 	}
+	
+
 
 }

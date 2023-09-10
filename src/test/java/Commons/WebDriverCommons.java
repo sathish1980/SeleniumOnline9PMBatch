@@ -123,4 +123,21 @@ public class WebDriverCommons
 	{
 		driver.navigate().back();
 	}
+	public void ClearPopups(WebDriver driver) throws InterruptedException
+	{
+		//Thread.sleep(5000);
+		List<WebElement> AllFrames =driver.findElements(By.tagName("iframe"));
+		for(int i=0;i<AllFrames.size();i++)
+		{
+			driver.switchTo().frame(i);
+			List<WebElement> elementExist = driver.findElements(By.xpath("//*[@class='close']"));
+			if(elementExist.size()>0)
+			{
+				Explicitwaitforelementobeclickable(driver,driver.findElement(By.xpath("//*[@class='close']")));
+				driver.findElement(By.xpath("//*[@class='close']")).click();
+				driver.switchTo().defaultContent();
+			}
+			driver.switchTo().defaultContent();
+		}
+	}
 }
